@@ -1,6 +1,7 @@
 import re
+from collections import Counter
 
-from model.TenGodTable import TenGodTrunkTable, TenGodBranchTable
+from model.TenGodTable import TenGodTrunkTable, TenGodBranchTable, SheepBladeTable, FiveElementTable
 
 
 class EightChar:
@@ -30,15 +31,35 @@ class EightChar:
 甲辰
 辛卯
 戊子
+
+丙子年，甲午月，甲辰日，己巳时
+
+玉午
+丙午
+丙戍
+庚寅
+
+乙卯、丙戌、癸西、丙辰
+
+辛丑 甲午 丙申 王辰
+丁丙丁甲
+酉申卯子
 """
 if __name__ == '__main__':
-    a = EightChar("辛未 辛卯 乙酉 戊寅")
+    #a = EightChar("辛未 辛卯 乙酉 戊寅")
     #a = EightChar("丁卯 甲辰 辛卯 戊子")
+    #a = EightChar("乙卯 丙戌 癸酉 丙辰")
+    #a = EightChar("辛丑 甲午 丙申 壬辰")
+    a = EightChar("甲子 丁卯 丙申 丁酉")
 
     trunk = getattr(a, "trunk")
     branch = getattr(a, "branch")
+    eightChar = getattr(a, "eightChar")
+
     trunkTable = TenGodTrunkTable()
     branchTable = TenGodBranchTable()
+    sheepBladeTable = SheepBladeTable()
+
     ten_god_list = []
 
     print("--- trunk & trunk-----")
@@ -54,4 +75,18 @@ if __name__ == '__main__':
             god = branchTable.getResult(a + b)
             ten_god_list.append(god)
 
+    print("--- trunk & branch sheepBladeTable -----")
+    for a in trunk:
+        for b in branch:
+            god = sheepBladeTable.getResult(a + b)
+            ten_god_list.append(god)
+    print(Counter(ten_god_list))
     print(set(ten_god_list))
+
+    print("----- five -------")
+    fiveElementTable = FiveElementTable()
+    for char in eightChar:
+        fiveElementTable.getResult(char)
+
+
+
