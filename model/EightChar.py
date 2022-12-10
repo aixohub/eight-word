@@ -1,7 +1,7 @@
 import re
 from collections import Counter
 
-from model.TenGodTable import TenGodTrunkTable, TenGodBranchTable, SheepBladeTable, FiveElementTable
+from model.TenGodTable import TenGodTrunkTable, TenGodBranchTable, SheepBladeTable, FiveElementTable, VigorousWeakTable
 
 
 class EightChar:
@@ -46,11 +46,12 @@ class EightChar:
 酉申卯子
 """
 if __name__ == '__main__':
-    #a = EightChar("辛未 辛卯 乙酉 戊寅")
-    #a = EightChar("丁卯 甲辰 辛卯 戊子")
-    #a = EightChar("乙卯 丙戌 癸酉 丙辰")
-    #a = EightChar("辛丑 甲午 丙申 壬辰")
-    a = EightChar("甲子 丁卯 丙申 丁酉")
+    a = EightChar("辛未 辛卯 乙酉 戊寅")
+    #a = EightChar("辛未 辛卯 乙酉 丁丑")
+    # a = EightChar("丁卯 甲辰 辛卯 戊子")
+    # a = EightChar("乙卯 丙戌 癸酉 丙辰")
+    # a = EightChar("辛丑 甲午 丙申 壬辰")
+    # a = EightChar("甲子 丁卯 丙申 丁酉")
 
     trunk = getattr(a, "trunk")
     branch = getattr(a, "branch")
@@ -84,9 +85,19 @@ if __name__ == '__main__':
     print(set(ten_god_list))
 
     print("----- five -------")
+    five_element_list = []
     fiveElementTable = FiveElementTable()
     for char in eightChar:
-        fiveElementTable.getResult(char)
+        fiveElement = fiveElementTable.getResult(char)
+        five_element_list.append(fiveElement)
+    print(Counter(five_element_list))
 
+    print("--- trunk & branch VigorousWeak-----")
+    vigorous_weak_list = []
+    vigorousWeakTable = VigorousWeakTable()
+    for a in trunk:
+        for b in branch:
+            god = vigorousWeakTable.getResult(a + b)
+            vigorous_weak_list.append(god)
 
-
+    print(Counter(vigorous_weak_list))
