@@ -138,17 +138,28 @@ class GetMonthByYear:
         # 构造表
         self.table = table
 
+    def __str__(self):
+        return self.table.to_string()
+
+    def get_month(self, year, month):
+        year = year[0]
+        return self.table.loc[month, year]
+
 
 class GetDay:
     """
+    https://www.nongli.com/item5/bz/17105.html
     乘五除四九加日，
     双月间隔三十天。
     一二自加整少一，
     三五七八十尾前。
 
+    每个月调节数（一、四、五为1)、（二、六、七为2）、（三为0）（八为3）、（九、十为4)、（十一、十二为5)。
+    国年的一月、二月的余数要减去1，之后再算天干地支数。
     解释如下：
 
-    【年份的后两位乘5+年的后两位除4+9+阳历日子数+单月（为0）双月（30）+每个月的调节数(大月数,三五七八十,无1)】÷60＝取余数个位数为天干，余数除12取余为地支，
+    【年份的后两位乘5+年的后两位除4+9+阳历日子数+单月（为0）双月（30）+每个月的调节数(大月数,三五七八十,无1)】÷60＝取余数
+    个位数为天干，余数除12取余为地支，
 
     * 2000年后需用100加上后两位数，如2009年就用100+09然后再去计算。
     这里我们计算2018年09月18日的日干支如下:
@@ -162,14 +173,13 @@ class GetDay:
         self.trunk = trunk
         self.branch = branch
 
+    def __str__(self):
+        return self.__str__()
 
-def __str__(self):
-    return self.__str__()
+    def get_day(self, hour, day):
+        day = day[0]
+        return self.table.loc[hour, day]
 
-
-def get_day(self, hour, day):
-    day = day[0]
-    return self.table.loc[hour, day]
 
 class GetHour:
     """
@@ -202,14 +212,12 @@ class GetHour:
         # 构造表
         self.table = table
 
+    def __str__(self):
+        return self.table.to_string()
 
-def __str__(self):
-    return self.table.to_string()
-
-
-def get_hour(self, hour, day):
-    day = day[0]
-    return self.table.loc[hour, day]
+    def get_hour(self, hour, day):
+        day = day[0]
+        return self.table.loc[hour, day]
 
 
 def get_year_str(currentYear, age, month):

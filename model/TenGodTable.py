@@ -89,11 +89,10 @@ class TenGodBranchTable:
     def __str__(self):
         return self.table.to_string()
 
-    def getResult(self, str):
-        dayTrunk = str[0]
-        match = str[1]
-        res = self.table.loc[dayTrunk, match]
-        print(str + ": " + res)
+    def getResult(self, day):
+        day_trunk = day[0]
+        match = day[1]
+        res = self.table.loc[day_trunk, match]
         return res
 
 
@@ -203,7 +202,6 @@ class VigorousWeakTable:
         dayTrunk = str[0]
         match = str[1]
         res = self.table.loc[dayTrunk, match]
-        print(str + ": " + res)
         return res
 
 

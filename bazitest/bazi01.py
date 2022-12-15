@@ -51,7 +51,7 @@ if options.b:
                 day=options.day[1], time=options.time[1])
 else:
 
-    lunar = sxtwl.Lunar();
+    lunar = sxtwl.Lunar()
     if options.g:
         day = lunar.getDayBySolar(
             int(options.year), int(options.month), int(options.day))
