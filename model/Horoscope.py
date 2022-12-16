@@ -1,74 +1,6 @@
 import pandas as pd
 
-
-class DoublyLinkedNode:
-    def __init__(self, data):
-        self.data = data
-        self.prev = None
-        self.next = None
-
-
-class BuildNode:
-    def __init__(self, numbers):
-        tail_node_l = None
-        doubly_linked_list = None
-        # Iterate through the list, converting each element into a doubly linked list node and adding it to the list
-        for number in numbers:
-            # Create a doubly linked list node
-            node = DoublyLinkedNode(number)
-
-            # If the list is empty, set the node as the head of the list
-            if not doubly_linked_list:
-                doubly_linked_list = node
-
-            # Otherwise, add the node to the end of the list
-            else:
-                # Find the end of the list
-                current_node = doubly_linked_list
-                while current_node.next:
-                    current_node = current_node.next
-
-                # Add the node to the end of the list
-                current_node.next = node
-                node.prev = current_node
-                tail_node_l = current_node.next
-
-        head_node = doubly_linked_list
-        tail_node = tail_node_l
-
-        head_node.prev = tail_node
-        tail_node.next = head_node
-        self.data_node = doubly_linked_list
-        self.size = len(numbers)
-
-    def getTrunkNode(self, trunk, num):
-        current_node = self.data_node
-        while current_node.next:
-            data = current_node.__getattribute__('data')
-            if data == trunk:
-                i = 1
-                while current_node.prev:
-                    if i == num:
-                        return current_node.data
-                    else:
-                        i = i + 1
-                        current_node = current_node.prev
-
-            current_node = current_node.next
-
-    def getBranchNode(self, trunk, num):
-        current_node = self.data_node
-        while current_node.next:
-            data = current_node.__getattribute__('data')
-            if data == trunk:
-                i = 1
-                while current_node.prev:
-                    if i == num:
-                        return current_node.data
-                    else:
-                        i = i + 1
-                        current_node = current_node.prev
-            current_node = current_node.next
+from model.DoublyLinkedNode import BuildNode
 
 
 class GetYear:
@@ -90,7 +22,7 @@ class GetYear:
         if rest_num == 0:
             rest_num = 10
         build_node = BuildNode(self.trunk)
-        return build_node.getTrunkNode(trunk, rest_num)
+        return build_node.get_trunk_node(trunk, rest_num)
 
     def get_year_branch(self, currentYear, age):
         """
@@ -101,7 +33,7 @@ class GetYear:
         if rest_num == 0:
             rest_num = 12
         build_node = BuildNode(self.branch)
-        return build_node.getBranchNode(trunk, rest_num)
+        return build_node.get_branch_node(trunk, rest_num)
 
     def get_year(self, currentYear, age):
         return self.get_year_trunk(currentYear, age) + self.get_year_branch(currentYear, age)
