@@ -1,44 +1,14 @@
 import math
 
 from base import int2, J2000, radd, dt_T, pi2, XL, pty_zty2, JD
+from base.JieQi import JieQi
 from base.Lunar import SSQ, Obb
-from model.EightChar import EightChar
-from model.Nayin import JieQiMing, ArrayDunNian, NaYin, jia_zi
+from base.BaseDict import JieQiMing, ArrayDunNian, NaYin, jia_zi
 from model.TenGodTable import FiveElementTable
 import pandas as pd
 
 
-class JieQi:
-    def __init__(self):
-        self.arrayJQ = None
-        self.ssq = SSQ()
-        self.obb = Obb()
-        print()
 
-    def get_jie_qi(self, y):
-        """
-        //根据公历年份返回24节气，节气从每年立春开始，这是八字月柱的排法
-        //共25个节气，今年立春到明年立春，北京时间
-        """
-        self.arrayJQ = []
-        self.ssq.calcY(int2((y - 2000) * 365.2422 + 180))
-        i = 3
-        while i < 24:  # 立春到大雪，21个
-            index = i - 3
-            zq = self.ssq.ZQ[i]
-            self.arrayJQ.append(self.obb.qi_accurate2(zq) + J2000)
-            i = i + 1
-        # 计算下一年的节气表，提取冬至到立春4个
-        self.ssq.calcY(int2((y + 1 - 2000) * 365.2422 + 180))
-        i = 0
-        while i < 4:  # 立春到大雪，21个
-            self.arrayJQ.append(self.obb.qi_accurate2(self.ssq.ZQ[i]) + J2000)
-            i = i + 1
-
-    # 快捷函数，根据年数字获取甲子数
-    def GetNianJiaZiShu(self, yy):
-        iJZ = (yy - 1984 + 6000000) % 60
-        return iJZ
 
 
 class BaZiObject:
@@ -229,45 +199,42 @@ class FatePlan:
             else:
                 self.bzpp.isNiDaYun = 1
                 # 顺逆
-            if 0 == self.bzpp.isNiDaYun:
-                # 顺行计算起运，一年 365.2422 天，大运是三天一年
-                # 顺行计算差值是后面节气减出生时间
-                deltaShun = self.bzpp.JQJD1 - self.curJD  # 差值天数
-                # 转为起运天数
-                qiyunShun = (deltaShun / 3.0) * 365.2422
-                self.bzpp.DaYunJD = self.curJD + qiyunShun
-
-            else:
-                # 逆行计算起运
-                deltaNi = self.curJD - self.bzpp.JQJD0  # 逆行大运节气差值天数
-                # console.log("逆行数：" + deltaNi) 
-                # 转为起运天数
-                qiyunNi = (deltaNi / 3.0) * 365.2422
-                self.bzpp.DaYunJD = self.curJD + qiyunNi
-
-                ######################
-            # 胎元，月令甲子数减9，倒数前面第十个月
-            self.bzpp.iTaiYuan = (self.bzpp.iYueJZ - 9 + 60) % 60
-            # 命宫1，数字速查法，不考虑中气
-            # 寅1，卯2，，，，，子11，丑12，先计算月份的
-            nMCount = (self.bzpp.iYueJZ % 12) - 1  # 原本子为0，丑为1，寅为2，都少1
-            if (nMCount <= 0):
-                nMCount += 12  # 子11，丑是12
-            # 再计算时辰的
-            nHCount = (self.bzpp.iShiJZ % 12) - 1
-            if (nHCount <= 0):
-                nHCount += 12
-                # 计算命宫地支数，1到12
-            nMGDZ = 14 - (nMCount + nHCount)
-            if (nMGDZ < 1):
-                nMGDZ += 12  # 小于1的变成1到12月
-                # 五虎遁年，查月干
-            nYearOrder = (self.bzpp.iNianJZ) % 5
-            nMG = ArrayDunNian[nYearOrder] + (nMGDZ - 1)
-            self.bzpp.iMingGong = (nMG % 60)  # 60范围之内
-
-            # 返回
-            return self.bzpp
+        if 0 == self.bzpp.isNiDaYun:
+            # 顺行计算起运，一年 365.2422 天，大运是三天一年
+            # 顺行计算差值是后面节气减出生时间
+            deltaShun = self.bzpp.JQJD1 - self.curJD  # 差值天数
+            # 转为起运天数
+            qiyunShun = (deltaShun / 3.0) * 365.2422
+            self.bzpp.DaYunJD = self.curJD + qiyunShun
+        else:
+            # 逆行计算起运
+            deltaNi = self.curJD - self.bzpp.JQJD0  # 逆行大运节气差值天数
+            # console.log("逆行数：" + deltaNi) 
+            # 转为起运天数
+            qiyunNi = (deltaNi / 3.0) * 365.2422
+            self.bzpp.DaYunJD = self.curJD + qiyunNi
+            ######################
+        # 胎元，月令甲子数减9，倒数前面第十个月
+        self.bzpp.iTaiYuan = (self.bzpp.iYueJZ - 9 + 60) % 60
+        # 命宫1，数字速查法，不考虑中气
+        # 寅1，卯2，，，，，子11，丑12，先计算月份的
+        nMCount = (self.bzpp.iYueJZ % 12) - 1  # 原本子为0，丑为1，寅为2，都少1
+        if (nMCount <= 0):
+            nMCount += 12  # 子11，丑是12
+        # 再计算时辰的
+        nHCount = (self.bzpp.iShiJZ % 12) - 1
+        if (nHCount <= 0):
+            nHCount += 12
+            # 计算命宫地支数，1到12
+        nMGDZ = 14 - (nMCount + nHCount)
+        if (nMGDZ < 1):
+            nMGDZ += 12  # 小于1的变成1到12月
+            # 五虎遁年，查月干
+        nYearOrder = (self.bzpp.iNianJZ) % 5
+        nMG = ArrayDunNian[nYearOrder] + (nMGDZ - 1)
+        self.bzpp.iMingGong = (nMG % 60)  # 60范围之内
+        # 返回
+        return self.bzpp
 
     def get_ten_big_fate(self):
         if 0 == self.bzpp.IsUseZTY:
@@ -291,7 +258,7 @@ class FatePlan:
             iYunDelta = -1
         #  起年公历年、起年甲子数
         qiyunGLNian = self.qiyunDD.Y
-        iQiYunGLNianJZ = self.jie_qi.GetNianJiaZiShu(qiyunGLNian) 
+        iQiYunGLNianJZ = self.jie_qi.GetNianJiaZiShu(qiyunGLNian)
         # 开始排大运
         self.strDaYunJiaZi = "大运 "
         self.strDaYunNaYin = "纳音 "
@@ -310,11 +277,11 @@ class FatePlan:
             strDaYunZhiNian += str(qiyunGLNian + 9 + i * 10) + " "
             i = i + 1
         # 添加到结果串
-        self.strRet += self.strDaYunJiaZi + "<br>" 
-        self.strRet += self.strDaYunNaYin + "<br>" 
-        self.strRet += self.strDaYunZhouSui + "<br>" 
-        self.strRet += self.strDaYunQiNian + "<br>" 
-        self.strRet += "流年<br>" 
+        self.strRet += self.strDaYunJiaZi + "<br>"
+        self.strRet += self.strDaYunNaYin + "<br>"
+        self.strRet += self.strDaYunZhouSui + "<br>"
+        self.strRet += self.strDaYunQiNian + "<br>"
+        self.strRet += "流年<br>"
         self.syblArra = []
         syblCount = 0
         # 共十行
@@ -326,7 +293,7 @@ class FatePlan:
             while i < 8:
                 # 共八列
                 # 当前年份甲子数
-                curYJZ = (iQiYunGLNianJZ + j + i * 10) % 60 
+                curYJZ = (iQiYunGLNianJZ + j + i * 10) % 60
                 strCurLine += jia_zi[curYJZ] + " "
                 # 是否岁运并临
                 if curYJZ == arrayDaYunJiaZi[i]:  # 岁运并临
@@ -334,8 +301,10 @@ class FatePlan:
                     syblCount = syblCount + 1
                 i = i + 1
             self.big_yun.append(strCurLine)
-            self.strRet += strCurLine + "<br>" 
+            self.strRet += strCurLine + "<br>"
             j = j + 1
+
+
 
 
 if __name__ == '__main__':
@@ -345,5 +314,6 @@ if __name__ == '__main__':
     """
     https://mp.weixin.qq.com/s/v6GH63_W5Ar8tfgewnDe6g
     """
-    a = FatePlan("戊寅 癸亥 壬戌 丙午", '男')
-    a.get_big_fate()
+    a = FatePlan()
+    j = a.getFanTuiJD(1984, '戊寅', '癸亥', '壬戌', '丙午')
+    print(j)

@@ -3353,7 +3353,7 @@ class XL:
         return t
 
     def MS_aLon_t(self, W):  # 已知月日视黄经差求时间
-        t, v = 7771.37714500204
+        t = v = 7771.37714500204
         t = (W + 1.08472) / v
         t += (W - self.MS_aLon(t, 3, 3)) / v
         v = self.M_v(t) - self.E_v(t)  # v的精度0.5%，详见原文
