@@ -115,7 +115,7 @@ class TempleWish:
 
 if __name__ == '__main__':
     pai_pan = Paipan()
-    eight_char = pai_pan.get_eight_char('甘肃省', '兰州市', "2022-12-18", "12:2:41")
+    eight_char = pai_pan.get_eight_char('北京市', '海淀区', "1991-12-10", "18:2:41")
     print(eight_char)
     # a = TempleWish("辛未 辛卯 乙酉 戊寅")
     a = TempleWish("戊寅 癸亥 壬戌 丙午", '男')
