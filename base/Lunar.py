@@ -125,6 +125,7 @@ class Obb:
         while i < len(self.sFtv):
             self.sFtv[i] = self.sFtv[i].split(',')
             i = i + 1
+        self.XL = XL()
 
     def get_NH(self, y):
         """
@@ -153,16 +154,16 @@ class Obb:
         while i < len(self.sFtv[u.m - 1]):  # 公历节日或纪念日, 遍历本月节日表
             s = self.sFtv[u.m - 1][i]
             i = i + 1
-            if s[0, 2] != d0:
+            if s[0: 2] != d0:
                 continue
-            s = s[2, len(s) - 2]
-            type = s[0, 1]
-            if s[5, 1] == '-':  # 有年限的
-                if u.y < (s[1, 4] - 0) or u.y > (s[6, 4] - 0):
+            s = s[2: len(s) - 2]
+            type = s[0: 1]
+            if s[5: 1] == '-':  # 有年限的
+                if u.y < (s[1: 4] - 0) or u.y > (s[6: 4] - 0):
                     continue
                 else:
                     if u.y < 1850: continue
-                    s = s[1, len(s) - 1]
+                    s = s[1: len(s) - 1]
 
         if type == '#':
             r.A += s + ' '
@@ -245,7 +246,7 @@ class Obb:
             if d == '十二初八':
                 r.B += '腊八节 '
 
-        if (u.Lmc2 == '正'):  # 最后一月
+        if u.Lmc2 == '正':  # 最后一月
             if d == '十二三十' & u.Ldn == 30:
                 r.A += '除夕 ',
                 r.Fjia = 1
@@ -287,13 +288,13 @@ class Obb:
 
     def mingLiBaZi(self, jd, J, ob):  # 命理八字计算。jd为格林尼治UT(J2000起算),J为本地经度,返回在物件ob中
         jd2 = jd + dt_T(jd)  # 力学时
-        w = XL.S_aLon(jd2 / 36525, -1)  # 此刻太阳视黄经
+        w = self.XL.S_aLon(jd2 / 36525, -1)  # 此刻太阳视黄经
         k = int2((w / pi2 * 360 + 45 + 15 * 360) / 30)  # 1984年立春起算的节气数(不含中气)
-        jd += pty_zty2(jd2 / 36525) + J / math.PI / 2  # 本地真太阳时(使用低精度算法计算时差)
-        ob.bz_zty = JD.timeStr(jd)
+        jd += pty_zty2(jd2 / 36525) + J / math.pi / 2  # 本地真太阳时(使用低精度算法计算时差)
+        ob.bz_zty = timeStr(jd)
 
         jd += 13 / 24  # 转为前一日23点起算(原jd为本日中午12点起算)
-        D = math.floor(jd),
+        D = math.floor(jd)
         SC = int2((jd - D) * 12)  # 日数与时辰
 
         v = int2(k / 12 + 6000000)
@@ -304,13 +305,13 @@ class Obb:
         ob.bz_jr = self.Gan[v % 10] + self.Zhi[v % 12]
         v = (D - 1) * 12 + 90000000 + SC
         ob.bz_js = self.Gan[v % 10] + self.Zhi[v % 12]
-        v -= SC,
+        v -= SC
         ob.bz_JS = ''  # 全天纪时表
         i = 0
         while i < 13:  # 一天中包含有13个纪时
             c = self.Gan[(v + i) % 10] + self.Zhi[(v + i) % 12]  # 各时辰的八字
             if SC == i:
-                ob.bz_js = c,
+                ob.bz_js = c
                 c = '<font color=red>' + c + '</font>'  # 红色显示这时辰
             ob.bz_JS += (' ' if i else '') + c
             i = i + 1
@@ -335,6 +336,22 @@ class Obb:
 
     def so_accurate2(self, jd):  # 精朔
         return self.so_accurate(math.floor((jd + 8) / 29.5306) * math.pi * 2)
+
+
+class Ob:
+    def __init__(self):
+        self.d0 = ""  # 2000.0 起算儒略日, 北京时12: 00
+        self.di = ""  # 所在公历月内日序数
+        self.y = ""  # 所在公历年, 同lun.y
+        self.m = ""  # 所在公历月, 同lun.m
+        self.d = ""  # 日名称(公历)
+        self.dn = ""  # 所在公历月的总天数, 同lun.d0
+        self.week0 = ''  # 所在月的月首的星期, 同lun.w0
+        self.week = ""  # 星期
+        self.weeki = ""  # 在本月中的周序号
+        self.weekN = ""  # 本月的总周数
+        # self的农历信息
+        self.Ldi = ""
 
 
 class SSQ:
@@ -409,6 +426,19 @@ class SSQ:
         self.SB = self.jie_ya(suoS)
         # 定气修正表解压
         self.QB = self.jie_ya(qiS)
+        # 闰月位置
+        self.leap = 0
+        # 各月名称
+        self.ym = []
+        # 中气表, 其中.liqiu是节气立秋的儒略日, 计算三伏时用到
+        self.ZQ = []
+        # 合朔表
+        self.HS = [[], ]
+        # 各月大小
+        self.dx = [[], ]
+        # 年计数
+        self.Yn = [],
+        self.obb = Obb()
 
     def jie_ya(self, s=None):
         """
@@ -486,6 +516,171 @@ class SSQ:
         if v < 1200 or v > 86400 - 1200:
             t = XL.S_aLon_t(W) * 36525 - dt_T(t) + 8 / 24
         return t
+
+    def so_high(self, W):
+        # 较高精度朔
+        t = XL.MS_aLon_t2(W) * 36525
+        t = t - dt_T(t) + 8 / 24
+        v = ((t + 0.5) % 1) * 86400
+        if v < 1800 | v > 86400 - 1800:
+            t = XL.MS_aLon_t(W) * 36525 - dt_T(t) + 8 / 24
+        return t
+
+    # public公有成员定义
+    def calc(self, jd, qs):  # jd应靠近所要取得的气朔日,qs='气'时，算节气的儒略日
+        jd += 2451545
+        B = self.suoKB
+        pc = 14
+        if qs == '气':
+            B = self.qiKB,
+            pc = 7
+        f1 = B[0] - pc,
+        f2 = B[len(B) - 1] - pc,
+        f3 = 2436935
+        if jd < f1 | jd >= f3:  # 平气朔表中首个之前，使用现代天文算法。1960.1.1以后，使用现代天文算法 (这一部分调用了qi_high和so_high,所以需星历表支持)
+            if qs == '气':
+                return math.floor(self.qi_high(math.floor(
+                    (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
+            else:
+                return math.floor(self.so_high(
+                    math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5);  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+
+        if jd >= f1 & jd < f2:  # 平气或平朔
+            i = 0
+            while i < len(B):
+                if jd + pc < B[i + 2]:
+                    break
+                i += 2
+            D = B[i] + B[i + 1] * math.floor((jd + pc - B[i]) / B[i + 1])
+            D = math.floor(D + 0.5)
+            if D == 1683460:
+                D = D + 1  # 如果使用太初历计算-103年1月24日的朔日,结果得到的是23日,这里修正为24日(实历)。修正后仍不影响-103的无中置闰。如果使用秦汉历，得到的是24日，本行D不会被执行。
+            return D - 2451545
+
+        if jd >= f2 & jd < f3:  # 定气或定朔
+            if qs == '气':
+                D = math.floor(self.qi_low(
+                    math.floor(
+                        (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
+                n = self.QB.substr(math.floor((jd - f2) / 365.2422 * 24), 1)  # 找定气修正值
+            else:
+                D = math.floor(
+                    self.so_low(math.floor(
+                        (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5);  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+                n = self.SB.substr(math.floor((jd - f2) / 29.5306), 1);  # 找定朔修正值
+
+        if n == "1":
+            return D + 1
+        if n == "2":
+            return D - 1
+        return D
+
+    # 排月序(生成实际年历),在调用calcY()后得到以下数据
+    # 时间系统全部使用北京时，即使是天象时刻的输出，也是使用北京时
+    # 如果天象的输出不使用北京时，会造成显示混乱，更严重的是无法与古历比对
+
+    def calcY(self, jd):  # 农历排月序计算,可定出农历,有效范围：两个冬至之间(冬至一 <= d < 冬至二)
+        A = [self.ZQ, ]
+        B = self.HS  # 中气表,日月合朔表(整日)
+
+        # 该年的气
+        W = int2((jd - 355 + 183) / 365.2422) * 365.2422 + 355  # 355是2000.12冬至,得到较靠近jd的冬至估计值
+        if self.calc(W, '气') > jd:
+            W -= 365.2422
+        i = 0
+        while i < 25:
+            A[i] = self.calc(W + 15.2184 * i, '气');  # 25个节气时刻(北京时间),从冬至开始到下一个冬至以后
+            A.pe1 = self.calc(W - 15.2, '气');
+            A.pe2 = self.calc(W - 30.4, '气');  # 补算二气,确保一年中所有月份的“气”全部被计算在内
+            i = i + 1
+
+        # 今年"首朔"的日月黄经差w
+        w = self.calc(A[0], '朔');  # 求较靠近冬至的朔日
+        if w > A[0]:
+            w -= 29.53
+
+        # 该年所有朔,包含14个月的始末
+        i = 0
+        while i < 15:
+            B[i] = self.calc(w + 29.5306 * i, '朔');
+            i = i + 1
+        # 月大小
+        self.leap = 0
+        i = 0
+        while i < 14:
+            self.dx[i] = self.HS[i + 1] - self.HS[i];  # 月大小
+            self.ym[i] = i  # 月序初始化
+            i = i + 1
+        # -721年至-104年的后九月及月建问题,与朔有关，与气无关
+        YY = int2((self.ZQ[0] + 10 + 180) / 365.2422) + 2000  # 确定年份
+        if YY >= -721 & YY <= -104:
+            ns = []
+            yy = 0
+            i = 0
+            while i < 3:
+                yy = YY + i - 1
+                # 颁行历年首, 闰月名称, 月建
+                if yy >= -721:
+                    ns[i] = self.calc(1457698 - J2000 + int2(0.342 + (yy + 721) * 12.368422) * 29.5306, '朔'),
+                    ns[i + 3] = '十三',
+                    ns[i + 6] = 2  # 春秋历,ly为-722.12.17
+                if yy >= -479:
+                    ns[i] = self.calc(1546083 - J2000 + int2(0.500 + (yy + 479) * 12.368422) * 29.5306, '朔'),
+                    ns[i + 3] = '十三',
+                    ns[i + 6] = 2;  # 战国历,ly为-480.12.11
+                if yy >= -220:
+                    ns[i] = self.calc(1640641 - J2000 + int2(0.866 + (yy + 220) * 12.369000) * 29.5306, '朔'),
+                    ns[i + 3] = '后九',
+                    ns[i + 6] = 11  # 秦汉历,ly为-221.10.31
+
+            i = 0
+            while i < 14:
+                nn = 2
+                while nn >= 0:
+                    if self.HS[i] >= ns[nn]:
+                        break
+                    nn = nn - 1
+                f1 = int2((self.HS[i] - ns[nn] + 15) / 29.5306)  # 该月积数
+                if f1 < 12:
+                    self.ym[i] = self.obb.ymc[(f1 + ns[nn + 6]) % 12]
+                else:
+                    self.ym[i] = ns[nn + 3]
+                i = i + 1
+            return
+
+        # 无中气置闰法确定闰月,(气朔结合法,数据源需有冬至开始的的气和朔)
+        if B[13] <= A[24]:  # 第13月的月末没有超过冬至(不含冬至),说明今年含有13个月
+            i = 1
+            while B[i + 1] > A[2 * i] & i < 13:
+                i = i + 1  # 在13个月中找第1个没有中气的月份
+            self.leap = i
+            while i < 14:
+                self.ym[i] = self.ym[i] - 1
+                i = i + 1
+
+        # 名称转换(月建别名)
+        i = 0
+        while i < 14:
+            Dm = self.HS[i] + J2000,
+            v2 = self.ym[i];  # Dm初一的儒略日,v2为月建序号
+            mc = self.obb.ymc[v2 % 12];  # 月建对应的默认月名称：建子十一,建丑十二,建寅为正……
+            if Dm >= 1724360 & Dm <= 1729794:
+                mc = self.obb.ymc[(v2 + 1) % 12];  # 8.01.15至 23.12.02 建子为十二,其它顺推
+            elif Dm >= 1807724 & Dm <= 1808699:
+                mc = self.obb.ymc[(v2 + 1) % 12]  # 237.04.12至239.12.13 建子为十二,其它顺推
+            elif Dm >= 1999349 & Dm <= 1999467:
+                mc = self.obb.ymc[(v2 + 2) % 12];  # 761.12.02至762.03.30 建子为正月,其它顺推
+            elif Dm >= 1973067 & Dm <= 1977052:
+                if v2 % 12 == 0:
+                    mc = "正"
+                    if v2 == 2:
+                        mc = '一'  # 689.12.18至700.11.15 建子为正月,建寅为一月,其它不变
+
+            if Dm == 1729794 | Dm == 1808699:
+                mc = '拾贰'  # 239.12.13及23.12.02均为十二月,为避免两个连续十二月，此处改名
+
+            self.ym[i] = mc
+            i = i + 1
 
 
 if __name__ == '__main__':

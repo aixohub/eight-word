@@ -310,8 +310,10 @@ def XL0_calc(xt, zn, t, n):  # xt星体,zn坐标号,t儒略世纪数,n计算项�
     N0 = F[pn + 1] - F[pn]  # N0序列总数
     i = 0
     while i < 6:
-        n1 = F[pn + i], n2 = F[pn + 1 + i], n0 = n2 - n1
-        if n0:
+        n1 = F[pn + i]
+        n2 = F[pn + 1 + i]
+        n0 = F[pn + 1 + i] - F[pn + i]
+        if n0 == None:
             continue
         if n < 0:
             N = n2  # 确定项数
@@ -331,7 +333,7 @@ def XL0_calc(xt, zn, t, n):  # xt星体,zn坐标号,t儒略世纪数,n计算项�
         tn *= t
     v /= F[0]
     if xt == 0:  # 地球
-        t2 = t * t,
+        t2 = t * t
         t3 = t2 * t  # 千年数的各次方
         if zn == 0:
             v += (-0.0728 - 2.7702 * t - 1.1019 * t2 - 0.0996 * t3) / rad
@@ -2685,7 +2687,7 @@ def rad2mrad(v):  # 对超过0-2pi的角度转为0-2pi
 
 def rad2rrad(v):  # 对超过-pi到pi的角度转为-pi到pi
     v = v % (2 * math.pi)
-    if (v <= -math.pi):
+    if v <= -math.pi:
         return v + 2 * math.pi
     if v > math.pi:
         return v - 2 * math.pi
@@ -2724,12 +2726,14 @@ def xyz2llr(xyz):  # 直角坐标转球
 
 def llrConv(JW, E):  # 球面坐标旋转
     # 黄道赤道坐标变换,赤到黄E取负
-    r = [],
-    J = JW[0],
+    r = [0, 0, 0]
+    J = JW[0]
     W = JW[1]
     r[0] = atan2(sin(J) * cos(E) - tan(W) * sin(E), cos(J))
     r[1] = asin(cos(E) * sin(W) + sin(E) * cos(W) * sin(J))
-    r[2] = JW[2]
+    print(JW)
+    if len(JW) == 3:
+        r[2] = JW[2]
     r[0] = rad2mrad(r[0])
     return r
 
@@ -2912,7 +2916,7 @@ def pty_zty(t):  # 时差计算(高精度),t力学时儒略世纪数
 
 def pty_zty2(t):  # 时差计算(低精度),误差约在1秒以内,t力学时儒略世纪数
     L = (1753470142 + 628331965331.8 * t + 5296.74 * t * t) / 1000000000 + math.pi
-    z = []
+    z = [1, 2]
     E = (84381.4088 - 46.836051 * t) / rad
     z[0] = XL0_calc(0, 0, t, 5) + math.pi
     z[1] = 0  # 地球坐标
@@ -2963,9 +2967,9 @@ def rad2strE(d, tim, ext):
     b = "0" + b
     c = "0" + c
     d = "00000" + d
-    s += a[len(a) - 3, 3] + w1
-    s += b[len(b) - 2, 2] + w2
-    s += c[len(c) - 2, 2]
+    s += a[len(a) - 3: 3] + w1
+    s += b[len(b) - 2: 2] + w2
+    s += c[len(c) - 2: 2]
     if ext:
         s += "." + d[len(d) - ext, ext] + w3
     return s
@@ -2985,9 +2989,9 @@ def dt_calc(y):
     #计算世界时与原子时之差,传入年
     """
     # 表中最后一年
-    y0 = dt_at[dt_at.length - 2]
+    y0 = dt_at[len(dt_at) - 2]
     # 表中最后一年的deltatT
-    t0 = dt_at[dt_at.length - 1]
+    t0 = dt_at[len(dt_at) - 1]
     if y >= y0:
         jsd = 31  # sjd是y1年之后的加速度估计。瑞士星历表jsd=31, NASA网站jsd=32, skmap的jsd=29
         if y > y0 + 100:
@@ -3096,6 +3100,23 @@ class JD:
         m = m[len(m) - 2, 2]
         s = s[len(s) - 2, 2]
         return Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s
+
+
+def timeStr(jd):
+    # 提取jd中的时间(去除日期)\
+    jd += 0.5
+    jd = (jd - int2(jd))
+    s = int2(jd * 86400 + 0.5)
+    h = int2(s / 3600)
+    s -= h * 3600
+    m = int2(s / 60)
+    s -= m * 60;
+    h = "0" + str(h)
+    m = "0" + str(m)
+    s = "0" + str(s)
+    hl = len(h) - 2
+
+    return h[hl:2] + ':' + m[len(m) - 2: 1] + ':' + s[len(s) - 2: 1]
 
 
 def getWeek(jd):
