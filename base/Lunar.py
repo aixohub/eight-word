@@ -338,7 +338,11 @@ class Obb:
         return self.so_accurate(math.floor((jd + 8) / 29.5306) * math.pi * 2)
 
 
-class Ob:
+class DaySelected:
+    """
+    计算出的日子属性
+    """
+
     def __init__(self):
         self.d0 = ""  # 2000.0 起算儒略日, 北京时12: 00
         self.di = ""  # 所在公历月内日序数
@@ -352,6 +356,20 @@ class Ob:
         self.weekN = ""  # 本月的总周数
         # self的农历信息
         self.Ldi = ""
+        self.pro = None
+        self.city = None
+        self.bz_jn = None
+        self.bz_jy = None
+        self.bz_jr = None
+        """
+        真太阳
+        """
+        self.bz_js = None
+        """
+        真太阳
+        """
+        self.bz_zty = None
+        self.yyyy_MM_dd = None
 
 
 class SSQ:

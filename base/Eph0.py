@@ -2842,7 +2842,6 @@ def llrConv(JW, E):  # 球面坐标旋转
     W = JW[1]
     r[0] = atan2(sin(J) * cos(E) - tan(W) * sin(E), cos(J))
     r[1] = asin(cos(E) * sin(W) + sin(E) * cos(W) * sin(J))
-    print(JW)
     if len(JW) == 3:
         r[2] = JW[2]
     r[0] = rad2mrad(r[0])
@@ -3325,7 +3324,6 @@ class XL:
         return self.M_Lon(t, Mn) + gxc_moonLon(t) - (self.E_Lon(t, Sn) + gxc_sunLon(t) + math.pi)
 
     def S_aLon(self, t, n):  # 太阳视黄经
-        print("self.E_Lon(t, n)---" + str(self.E_Lon(t, n)) )
         return self.E_Lon(t, n) + nutationLon2(t) + gxc_sunLon(t) + math.pi  # 注意，这里的章动计算很耗时
 
     # =========================

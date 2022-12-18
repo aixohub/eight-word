@@ -54,16 +54,27 @@ SQv = [
 
 
 class JW:
+    """
+    根据省市获取经纬度
+    """
+
     def __init__(self, ):
         self.J = None
         self.W = None
         self.curr = None
         self.jw = []
+        self.pro = {}
+        self.r = None
         i = 0
         while i < len(JWv):
             JWv[i] = JWv[i].split(" ")  # 解开清单
             self.jw.append(JWv[i])
             i = i + 1
+        j = 0
+        while j < len(self.jw):
+            a = self.jw[j][0]
+            self.pro.setdefault(a, j)
+            j = j + 1
 
     def get_i(self, i):
         ob = self.jw[i]
@@ -75,8 +86,12 @@ class JW:
             self.curr.setdefault(b, a)
             i = i + 1
 
-    def get_lat(self, i, city):
-        self.get_i(i)
+    def get_index(self, pro):
+        return self.pro[pro]
+
+    def get_lat(self, pro, city):
+        index = self.get_index(pro)
+        self.get_i(index)
         return self.curr[city]
 
     def jw_decode(self, m):
@@ -84,7 +99,6 @@ class JW:
         i = 0
         while i < 4:  # 对经纬度解压缩
             v.append(ord(m[i]))
-            print(v[i])
             if v[i] > 96:
                 v[i] -= 97 - 36
             elif v[i] > 64:
@@ -95,11 +109,16 @@ class JW:
         self.J = (v[2] + v[3] / 60 + 73) / 180 * math.pi
         self.W = (v[0] + v[1] / 60) / 180 * math.pi
 
+    def get_r(self, pro, city):
+        lat = self.get_lat(pro, city)
+        self.jw_decode(lat)
+        self.r = self.J / math.pi * 180
+        return self.r
+
 
 if __name__ == '__main__':
     a = JW()
-    a.get_i(3)
-    c = a.get_lat(3, '兰州市')
+    c = a.get_lat('甘肃省', '兰州市')
     a.jw_decode(c)
     j = rad2str2(a.J)
     w = rad2str2(a.W)
