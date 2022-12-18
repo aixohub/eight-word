@@ -4,14 +4,34 @@ from collections import Counter
 
 from base.Paipan import Paipan
 from model.EightChar import EightChar
+from model.FatePlan import FatePlan
 from model.Nayin import na_yin_dict
 from model.TenGodTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTable, TenGodBranchTable, SheepBladeTable
 
 
 class TempleWish:
-    def __init__(self, eightChar, sex):
-        self.eightChar = EightChar(eightChar)
-        self.sex = sex
+    def __init__(self):
+        self.eightChar = None
+        self.sex = None
+        self.trunkAll = None
+        self.branchAll = None
+        self.eightWord = None
+        self.chang_sheng = None
+        self.ten_god = None
+        self.na_yin = None
+        self.pai_pan = Paipan()
+        self.fate_plan = FatePlan()
+        self.trunkTable = TenGodTrunkTable()
+        self.branchTable = TenGodBranchTable()
+        self.sheepBladeTable = SheepBladeTable()
+        self.vigorousWeakTable = VigorousWeakTable()
+
+    def exec_analyze(self, province, city, date, time, gender):
+        eight_char = self.pai_pan.get_eight_char(province, city, date, time)
+        self.fate_plan.get_bazi_object(self.pai_pan.jd, '男', self.pai_pan.birth_place_lat, 0)
+        self.fate_plan.get_ten_big_fate()
+        self.eightChar = EightChar(eight_char)
+        self.sex = gender
         trunkObj = collections.namedtuple("trunk", "year month day time")
         branchObj = collections.namedtuple("branch", "year month day time")
         self.trunkAll = trunkObj(year=self.eightChar.yearTrunk, month=self.eightChar.monthTrunk,
@@ -19,15 +39,6 @@ class TempleWish:
         self.branchAll = branchObj(year=self.eightChar.yearBranch, month=self.eightChar.monthBranch,
                                    day=self.eightChar.dayBranch, time=self.eightChar.hourBranch)
         self.eightWord = [item for item in zip(self.trunkAll, self.branchAll)]
-        self.trunkTable = TenGodTrunkTable()
-        self.branchTable = TenGodBranchTable()
-        self.sheepBladeTable = SheepBladeTable()
-        self.vigorousWeakTable = VigorousWeakTable()
-        self.chang_sheng = None
-        self.ten_god = None
-        self.na_yin = None
-
-    def exec_analyze(self):
         self.chang_sheng = [self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.yearBranch),
                             self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.monthBranch),
                             self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
@@ -39,6 +50,7 @@ class TempleWish:
         self.na_yin = []
         for item in self.eightWord:
             self.na_yin.append(na_yin_dict[item])
+
 
     def exec_analyze_match(self):
         trunk = self.eightChar.trunk
@@ -111,19 +123,21 @@ class TempleWish:
             print("{:^26s}".format(item), end=' ')
         print()
         print("-" * 140)
-
+        print(self.fate_plan.strDaYunJiaZi)
+        print(self.fate_plan.strDaYunNaYin)
+        print(self.fate_plan.strDaYunZhouSui)
+        print(self.fate_plan.strDaYunQiNian)
+        for item in self.fate_plan.big_yun:
+            print("{:^26s}".format(item))
 
 if __name__ == '__main__':
-    pai_pan = Paipan()
-    eight_char = pai_pan.get_eight_char('北京市', '海淀区', "1991-12-10", "18:2:41")
-    print(eight_char)
     # a = TempleWish("辛未 辛卯 乙酉 戊寅")
-    a = TempleWish("戊寅 癸亥 壬戌 丙午", '男')
+    a = TempleWish()
+    a.exec_analyze('北京市', '海淀区', "1991-12-10", "18:2:41", '男')
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")
     # a = EightChar("乙卯 丙戌 癸酉 丙辰")
     # a = EightChar("辛丑 甲午 丙申 壬辰")
     # a = EightChar("甲子 丁卯 丙申 丁酉")
-    a.exec_analyze()
     a.exec_analyze_print()

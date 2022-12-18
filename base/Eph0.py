@@ -2917,7 +2917,7 @@ def XL1_calc(zn, t, n):  # 计算月亮
             c += F[j] * math.cos(F[j + 1] + t * F[j + 2] + t2 * F[j + 3] + t3 * F[j + 4] + t4 * F[j + 5])
             j += 6
         v += c * tn
-        i = i+1
+        i = i + 1
         tn *= t
 
     if zn != 2:
@@ -3135,7 +3135,10 @@ class JD:
     日期元件
     """
 
-    def __init__(self, y, m, d):
+    def __init__(self):
+        self.jd = None
+
+    def get_jd(self, y, m, d):
         """
         公历转儒略日
         """
@@ -3152,6 +3155,7 @@ class JD:
             # 加百年闰
             n = 2 - n + int2(n / 4)
         self.jd = int2(365.25 * (y + 4716)) + int2(30.6001 * (m + 1)) + d + n - 1524.5
+        return self.jd
 
     def DD(self, jd):
         """

@@ -15,19 +15,21 @@ class Paipan:
         self.jw = JW()
         self.jd = None
         self.curTZ = -8
+        self.birth_place_lat = None
 
-    def get_eight_char(self, pro, city, date, time):
+    def get_eight_char(self, province, city, date, time):
         t = timeStr2hour(time)
         day_date = date.split("-")
         year = int(day_date[0])
         month = int(day_date[1])
         day = int(day_date[2])
-        self.jd = JD(year, month, day + t / 24)
-        r = self.jw.get_r(pro, city)
+        jd_object = JD()
+        self.jd = jd_object.get_jd(year, month, day + t / 24)
+        self.birth_place_lat = self.jw.get_r(province, city)
         self.ob.yyyy_MM_dd = date + " " + time
-        self.ob.pro = pro
+        self.ob.pro = province
         self.ob.city = city
-        self.obb.mingLiBaZi(self.jd.jd + self.curTZ / 24 - J2000, r / radd, self.ob)
+        self.obb.mingLiBaZi(self.jd + self.curTZ / 24 - J2000, self.birth_place_lat / radd, self.ob)
         return self.ob.bz_jn + ' ' + self.ob.bz_jy + ' ' + self.ob.bz_jr + ' ' + self.ob.bz_js
 
 
