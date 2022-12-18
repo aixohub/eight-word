@@ -2,19 +2,23 @@ import collections
 import re
 
 
-
 class EightChar:
 
     def __init__(self, eightChar):
         self.eightChar = re.sub(r"\s+", "", eightChar)
         self.yearTrunk = self.eightChar[0]
         self.yearBranch = self.eightChar[1]
+        self.year = self.eightChar[0] + self.eightChar[1]
         self.monthTrunk = self.eightChar[2]
         self.monthBranch = self.eightChar[3]
+        self.month = self.eightChar[2] + self.eightChar[3]
         self.dayTrunk = self.eightChar[4]
         self.dayBranch = self.eightChar[5]
+        self.day = self.eightChar[4] + self.eightChar[5]
         self.hourTrunk = self.eightChar[6]
         self.hourBranch = self.eightChar[7]
+        self.hour = self.eightChar[6] + self.eightChar[7]
+
         self.trunk = self.yearTrunk + self.monthTrunk + self.dayTrunk + self.hourTrunk
         self.branch = self.yearBranch + self.monthBranch + self.dayBranch + self.hourBranch
         trunkObj = collections.namedtuple("trunk", "year month day time")
@@ -24,9 +28,6 @@ class EightChar:
         self.branchAll = branchObj(year=self.yearBranch, month=self.monthBranch,
                                    day=self.dayBranch, time=self.hourBranch)
         self.eightWord = [item for item in zip(self.trunkAll, self.branchAll)]
-
-
-
 
 
 """

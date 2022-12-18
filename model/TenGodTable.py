@@ -264,6 +264,10 @@ class FiveElementTable:
         print(Str + ": " + res['阴阳'] + res['五行'])
         return res['阴阳'] + res['五行']
 
+    def get_yinyang(self, Str: object) -> object:
+        res = self.table.loc[Str]
+        return res['阴阳']
+
 
 if __name__ == '__main__':
     ten_god = TenGodTrunkTable()

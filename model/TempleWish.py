@@ -9,8 +9,9 @@ from model.TenGodTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTa
 
 
 class TempleWish:
-    def __init__(self, eightChar):
+    def __init__(self, eightChar, sex):
         self.eightChar = EightChar(eightChar)
+        self.sex = sex
         trunkObj = collections.namedtuple("trunk", "year month day time")
         branchObj = collections.namedtuple("branch", "year month day time")
         self.trunkAll = trunkObj(year=self.eightChar.yearTrunk, month=self.eightChar.monthTrunk,
@@ -117,7 +118,7 @@ if __name__ == '__main__':
     eight_char = pai_pan.get_eight_char('甘肃省', '兰州市', "2022-12-18", "12:2:41")
     print(eight_char)
     # a = TempleWish("辛未 辛卯 乙酉 戊寅")
-    a = TempleWish("戊寅 癸亥 壬戌 丙午")
+    a = TempleWish("戊寅 癸亥 壬戌 丙午", '男')
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")
