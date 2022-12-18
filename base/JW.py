@@ -2,6 +2,8 @@
 #
 import math
 
+from base import rad2str2
+
 JWv = [
     '北京市 dshN天安门 dshO北京市 djh8房山区 dihK大兴区 drhQ崇文区 dthQ朝阳区 dthd通州区 dvhI海淀区 duhP东城区 dthM西城区 dqhL宣武区 dphH丰台区 dshD石景山区 duh6门头沟区 eDhE昌平区 e8hd顺义区 eJhc怀柔区 e8i7平谷区 eRgw延庆县 eMho密云县',
     '福建省 Q5kI福州市 OTj5厦门市 OVid漳州市 Orje泉州市 QGib三明市 P6i2龙岩市 QdjA南平市 QekV宁德市 PQk0莆田市 QdjA延平区 QEia三元区 QGic梅列区 P6i2新罗区 QekV蕉城区 PRk6涵江区 PQk0城厢区 PQk1荔城区 PJk5秀屿区 P7jr泉港区 Ovje洛江区 Otja丰泽区 Otja鲤城区 Oij9同安区 ObjE翔安区 OYj6集美区 ORj5思明区 OVj5湖里区 OSix海沧区 OVih龙文区 OVid芗城区 OnjZ晋江市 Oijd石狮市 ORin龙海市 PIiP漳平市 OwjN南安市 PxiM永安市 R2jJ建瓯市 RKj7建阳市 Rkj2武夷山市 RMiT邵武市 R5kd福安市 RKlD福鼎市 PwkV长乐市 PhkN福清市 Q3kJ仓山区 Q4kI台江区 Q5kI鼓楼区 Q5kJ晋安区 PykR马尾区 Ohhi永定县 Nei0饶平县 NhiB诏安县 NviK云霄县 O8ib漳浦县 NgiQ东山县 OQjJ金门县 Obij长泰县 OMiI平和县 OViM南靖县 P1iW华安县 P4jB安溪县 PUjE德化县 PJjI永春县 QAjB尤溪县 Pgip大田县 QBhn清流县 QGhd宁化县 Phhj连城县 P3hP上杭县 P6h6武平县 PohL长汀县 QMiC明溪县 QsiA泰宁县 Qoho建宁县 RtjW浦城县 RXiK光泽县 Qmim顺昌县 QiiS将乐县 QOil沙县 QZjj古田县 Qtjx屏南县 QTkX罗源县 Qrky霞浦县 R7kK周宁县 RSkU寿宁县 RMjp政和县 RWjl松溪县 REks柘荣县 QCkW连江县 Q9k8闽侯县 QDjp闽清县 Pqju永泰县 PMjf仙游县 P2jm惠安县 PVkl平潭县',
@@ -77,7 +79,7 @@ class JW:
         self.get_i(i)
         return self.curr[city]
 
-    def JWdecode(self, m):
+    def jw_decode(self, m):
         v = []
         i = 0
         while i < 4:  # 对经纬度解压缩
@@ -98,6 +100,7 @@ if __name__ == '__main__':
     a = JW()
     a.get_i(3)
     c = a.get_lat(3, '兰州市')
-    a.JWdecode(c)
-    rad2str2()
+    a.jw_decode(c)
+    j = rad2str2(a.J)
+    w = rad2str2(a.W)
     print(a.J)

@@ -105,6 +105,117 @@ def atan(x): return math.atan(x)
 def atan2(y, x): return math.atan2(y, x)
 
 
+# =================================角度格式化=======================================
+# ==================================================================================
+# tim=0输出格式示例: -23°59' 48.23"
+# tim=1输出格式示例:  18h 29m 44.52s
+def rad2strE(d, tim, ext):  # 将弧度转为字串,ext为小数保留位数
+    s = " "
+    w1 = ""
+    w2 = ""
+    w3 = ""
+    if d < 0:
+        d = -d
+        s = '-'
+    if (tim):
+        d *= 12 / math.pi
+        w1 = "h ",
+        w2 = "m",
+        w3 = "s"
+    else:
+        d *= 180 / math.pi
+    a = math.floor(d)
+    d = (d - a) * 60
+    b = math.floor(d)
+    d = (d - b) * 60
+    c = math.floor(d)
+    Q = math.pow(10, ext)
+    d = math.floor((d - c) * Q + 0.5)
+    if d >= Q:
+        d -= Q,
+        c = c + 1
+    if c >= 60:
+        c -= 60
+        b = b + 1
+    if b >= 60:
+        b -= 60
+        a = a + 1
+
+    a = "   " + str(a)
+    b = "0" + str(b)
+    c = "0" + str(c)
+    d = "00000" + str(d)
+    s += a[len(a) - 3: 3] + w1
+    s += b[len(b) - 2: 2] + w2
+    s += c[len(c) - 2: 2]
+    if ext:
+        s += "." + d[len(d) - ext: ext] + w3
+    return s
+
+
+# 将弧度转为字串,保留2位
+def rad2str(d, tim):
+    return rad2strE(d, tim, 2)
+
+
+# 输出格式示例: -23°59'
+def rad2str2(d):
+    """
+    #将弧度转为字串,精确到分
+    """
+    s = "+"
+    w1 = "°"
+    w2 = "'"
+    w3 = "\""
+    if d < 0:
+        d = -d
+        s = '-'
+    d *= 180 / math.pi
+    a = math.floor(d)
+    b = math.floor((d - a) * 60 + 0.5)
+    if b >= 60:
+        b -= 60
+        a = a + 1
+    a = "   " + str(a)
+    b = "0" + str(b)
+    s += a[len(a) - 3:] + w1
+    s += b[len(b) - 2:] + w2
+    return s
+
+
+def m2fm(v, fx, fs):
+    """
+    #秒转为分秒,fx为小数点位数,fs为1转为"分秒"格式否则转为"角度分秒"格式
+    """
+    gn = ''
+    if (v < 0):
+        v = -v
+        gn = '-'
+    f = math.floor(v / 60)
+    m = v - f * 60
+    if fs is not None:
+        return gn + f + "'" + m.toFixed(fx) + '"'
+    if fs == 1:
+        return gn + f + '分' + m.toFixed(fx) + '秒'
+    if fs == 2:
+        return gn + f + 'm' + m.toFixed(fx) + 's'
+
+
+def str2rad(s, f):
+    """
+     #串转弧度, f=1表示输入的s为时分秒
+    """
+    fh = 1
+    f = 15 if f else 1
+    if s.indexOf('-') != -1:
+        fh = -1
+    # 多个空格合并为1个空格
+
+    s = s.strip()  # 去除前后空格
+    s = s.split(' ')
+    return fh * (s[0] * 3600 + s[1] * 60 + s[2] * 1) / rad * f
+
+
 # =================================行星星历=========================================
 # ==================================================================================
 
@@ -313,7 +424,7 @@ def XL0_calc(xt, zn, t, n):  # xt星体,zn坐标号,t儒略世纪数,n计算项�
         n1 = F[pn + i]
         n2 = F[pn + 1 + i]
         n0 = F[pn + 1 + i] - F[pn + i]
-        if n0 == None:
+        if n0 is None:
             continue
         if n < 0:
             N = n2  # 确定项数
@@ -327,8 +438,8 @@ def XL0_calc(xt, zn, t, n):  # xt星体,zn坐标号,t儒略世纪数,n计算项�
         c = 0
         while j < N:
             c += F[j] * math.cos(F[j + 1] + t * F[j + 2])
-            v += c * tn
             j += 3
+        v += c * tn
         i = i + 1
         tn *= t
     v /= F[0]
@@ -3110,13 +3221,13 @@ def timeStr(jd):
     h = int2(s / 3600)
     s -= h * 3600
     m = int2(s / 60)
-    s -= m * 60;
+    s -= m * 60
     h = "0" + str(h)
     m = "0" + str(m)
     s = "0" + str(s)
     hl = len(h) - 2
 
-    return h[hl:2] + ':' + m[len(m) - 2: 1] + ':' + s[len(s) - 2: 1]
+    return h[hl:2] + ':' + m[len(m) - 2:] + ':' + s[len(s) - 2:]
 
 
 def getWeek(jd):
@@ -3214,6 +3325,7 @@ class XL:
         return self.M_Lon(t, Mn) + gxc_moonLon(t) - (self.E_Lon(t, Sn) + gxc_sunLon(t) + math.pi)
 
     def S_aLon(self, t, n):  # 太阳视黄经
+        print("self.E_Lon(t, n)---" + str(self.E_Lon(t, n)) )
         return self.E_Lon(t, n) + nutationLon2(t) + gxc_sunLon(t) + math.pi  # 注意，这里的章动计算很耗时
 
     # =========================
