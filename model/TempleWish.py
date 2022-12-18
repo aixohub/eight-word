@@ -190,7 +190,9 @@ if __name__ == '__main__':
     a = TempleWish()
 
     #a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
-    a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
+    a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", "男")
+
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")
     # a = EightChar("乙卯 丙戌 癸酉 丙辰")
