@@ -3163,7 +3163,7 @@ class JD:
         """
         D = int2(jd + 0.5)
         F = jd + 0.5 - D
-        r = collections.namedtuple("trunk", "year month day time")  # 取得日数的整数部份A及小数部分F
+        r = collections.namedtuple("trunk", "Y M D h m")  # 取得日数的整数部份A及小数部分F
         if D >= 2299161:
             c = int2((D - 1867216.25) / 36524.25)
             D += 1 + c - int2(c / 4)
@@ -3174,7 +3174,7 @@ class JD:
         D -= int2(30.601 * r.M)
         r.D = D  # 日数
         if r.M > 13:
-            r.M -= 13,
+            r.M -= 13
             r.Y -= 4715
         else:
             r.M -= 1
@@ -3209,12 +3209,12 @@ class JD:
         h = "0" + h
         m = "0" + m
         s = "0" + s
-        Y = Y[len(Y) - 5, 5]
-        M = M[len(M) - 2, 2]
-        D = D[len(D) - 2, 2]
-        h = h[len(h) - 2, 2]
-        m = m[len(m) - 2, 2]
-        s = s[len(s) - 2, 2]
+        Y = Y[len(Y) - 5: 5]
+        M = M[len(M) - 2: 2]
+        D = D[len(D) - 2: 2]
+        h = h[len(h) - 2: 2]
+        m = m[len(m) - 2: 2]
+        s = s[len(s) - 2: 2]
         return Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s
 
 
@@ -3241,7 +3241,8 @@ def getWeek(jd):
 
 def nnweek(y, m, n, w):
     # 求y年m月的第n个星期w的儒略日数
-    jd = JD.JD(y, m, 1.5)  # 月首儒略日
+    jd_Object = JD()
+    jd = jd_Object.get_jd(y, m, 1.5)  # 月首儒略日
     w0 = (jd + 1 + 7000000) % 7  # 月首的星期
     r = jd - w0 + 7 * n + w  # jd-w0+7*n是和n个星期0,起算下本月第一行的星期日(可能落在上一月)。加w后为第n个星期w
     if w >= w0:
@@ -3251,7 +3252,7 @@ def nnweek(y, m, n, w):
         if m > 12:
             m = 1,
             y = y + 1  # 下个月
-        if r >= JD(y, m, 1.5).jd:
+        if r >= jd_Object.get_jd(y, m, 1.5):
             r -= 7  # r跑到下个月则减1周
     return r
 

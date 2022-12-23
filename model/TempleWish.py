@@ -178,9 +178,9 @@ class TempleWish:
         for item in self.daYunQiNian:
             print("{:<6s}".format(item), end=' ')
         print()
-        for item in self.fate_plan.big_yun:
-            item_list = item.split(" ")
-            print("{:<6s}".format("**"), end=' ')
+        for index in range(len(self.fate_plan.big_yun)):
+            item_list = self.fate_plan.big_yun[index].split(" ")
+            print("{:<6s}".format(str(index)), end=' ')
             for detail in item_list:
                 print("{:<5s}".format(detail), end=' ')
             print()
@@ -189,9 +189,11 @@ class TempleWish:
 if __name__ == '__main__':
     a = TempleWish()
 
-    #a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
+    # a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
-    a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", "男")
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "男")
+    a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
+
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")
