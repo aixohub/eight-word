@@ -5,6 +5,7 @@ from base.Paipan import Paipan
 from model.EightChar import EightChar
 from model.FatePlan import FatePlan
 from base.BaseDict import na_yin_dict
+from model.SkyAndLandDict import SkyAndLandDict
 from model.TenGodTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTable, TenGodBranchTable, SheepBladeTable
 
 
@@ -17,6 +18,7 @@ class TempleWish:
         self.eightWord = None
         self.chang_sheng = None
         self.ten_god = None
+        self.hidden_trunk = None
         self.na_yin = None
         self.pai_pan = Paipan()
         self.fate_plan = FatePlan()
@@ -24,12 +26,46 @@ class TempleWish:
         self.branchTable = TenGodBranchTable()
         self.sheepBladeTable = SheepBladeTable()
         self.vigorousWeakTable = VigorousWeakTable()
+        self.skyAndLandDict = SkyAndLandDict()
         self.daYunJiaZi = None
         self.daYunNaYin = None
         self.daYunZhouSui = None
         self.daYunQiNian = None
 
+    def exec_common(self):
+        trunkObj = collections.namedtuple("trunk", "year month day time")
+        branchObj = collections.namedtuple("branch", "year month day time")
+        self.trunkAll = trunkObj(year=self.eightChar.yearTrunk, month=self.eightChar.monthTrunk,
+                                 day=self.eightChar.dayTrunk, time=self.eightChar.hourTrunk)
+        self.branchAll = branchObj(year=self.eightChar.yearBranch, month=self.eightChar.monthBranch,
+                                   day=self.eightChar.dayBranch, time=self.eightChar.hourBranch)
+        self.eightWord = [item for item in zip(self.trunkAll, self.branchAll)]
+        self.chang_sheng = [self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.yearBranch),
+                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.monthBranch),
+                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
+                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.hourBranch)]
+        self.ten_god = [self.branchTable.getResult(self.eightChar.yearTrunk + self.eightChar.yearBranch),
+                        self.branchTable.getResult(self.eightChar.monthTrunk + self.eightChar.monthBranch),
+                        self.branchTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
+                        self.branchTable.getResult(self.eightChar.hourTrunk + self.eightChar.hourBranch)]
+        self.hidden_trunk = [
+            self.skyAndLandDict.get_hidde_trunk(self.eightChar.yearBranch),
+            self.skyAndLandDict.get_hidde_trunk(self.eightChar.monthBranch),
+            self.skyAndLandDict.get_hidde_trunk(self.eightChar.dayBranch),
+            self.skyAndLandDict.get_hidde_trunk(self.eightChar.hourBranch),
+        ]
+        self.na_yin = []
+        for item in self.eightWord:
+            self.na_yin.append(na_yin_dict[item])
+        self.daYunJiaZi = self.fate_plan.strDaYunJiaZi.split(" ")
+        self.daYunNaYin = self.fate_plan.strDaYunNaYin.split(" ")
+        self.daYunZhouSui = self.fate_plan.strDaYunZhouSui.split(" ")
+        self.daYunQiNian = self.fate_plan.strDaYunQiNian.split(" ")
+
     def exec_analyze_eight(self, province, city, ftStartYear, eight_char, gender):
+        """
+        根据甲子的起始年和八字推算
+        """
         eight_char_list = eight_char.split(" ")
         year = eight_char_list[0]
         month = eight_char_list[1]
@@ -41,57 +77,18 @@ class TempleWish:
         self.fate_plan.get_ten_big_fate()
         self.eightChar = EightChar(self.pai_pan.eight_char)
         self.sex = gender
-        trunkObj = collections.namedtuple("trunk", "year month day time")
-        branchObj = collections.namedtuple("branch", "year month day time")
-        self.trunkAll = trunkObj(year=self.eightChar.yearTrunk, month=self.eightChar.monthTrunk,
-                                 day=self.eightChar.dayTrunk, time=self.eightChar.hourTrunk)
-        self.branchAll = branchObj(year=self.eightChar.yearBranch, month=self.eightChar.monthBranch,
-                                   day=self.eightChar.dayBranch, time=self.eightChar.hourBranch)
-        self.eightWord = [item for item in zip(self.trunkAll, self.branchAll)]
-        self.chang_sheng = [self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.yearBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.monthBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.hourBranch)]
-        self.ten_god = [self.branchTable.getResult(self.eightChar.yearTrunk + self.eightChar.yearBranch),
-                        self.branchTable.getResult(self.eightChar.monthTrunk + self.eightChar.monthBranch),
-                        self.branchTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
-                        self.branchTable.getResult(self.eightChar.hourTrunk + self.eightChar.hourBranch)]
-        self.na_yin = []
-        for item in self.eightWord:
-            self.na_yin.append(na_yin_dict[item])
-        self.daYunJiaZi = self.fate_plan.strDaYunJiaZi.split(" ")
-        self.daYunNaYin = self.fate_plan.strDaYunNaYin.split(" ")
-        self.daYunZhouSui = self.fate_plan.strDaYunZhouSui.split(" ")
-        self.daYunQiNian = self.fate_plan.strDaYunQiNian.split(" ")
+        self.exec_common()
 
     def exec_analyze(self, province, city, date, time, gender):
+        """
+        根据年月月日推算
+        """
         eight_char = self.pai_pan.get_eight_char(province, city, date, time)
         self.fate_plan.get_bazi_object(self.pai_pan.jd, gender, self.pai_pan.birth_place_lat, 0)
         self.fate_plan.get_ten_big_fate()
         self.eightChar = EightChar(eight_char)
         self.sex = gender
-        trunkObj = collections.namedtuple("trunk", "year month day time")
-        branchObj = collections.namedtuple("branch", "year month day time")
-        self.trunkAll = trunkObj(year=self.eightChar.yearTrunk, month=self.eightChar.monthTrunk,
-                                 day=self.eightChar.dayTrunk, time=self.eightChar.hourTrunk)
-        self.branchAll = branchObj(year=self.eightChar.yearBranch, month=self.eightChar.monthBranch,
-                                   day=self.eightChar.dayBranch, time=self.eightChar.hourBranch)
-        self.eightWord = [item for item in zip(self.trunkAll, self.branchAll)]
-        self.chang_sheng = [self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.yearBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.monthBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
-                            self.vigorousWeakTable.getResult(self.eightChar.dayTrunk + self.eightChar.hourBranch)]
-        self.ten_god = [self.branchTable.getResult(self.eightChar.yearTrunk + self.eightChar.yearBranch),
-                        self.branchTable.getResult(self.eightChar.monthTrunk + self.eightChar.monthBranch),
-                        self.branchTable.getResult(self.eightChar.dayTrunk + self.eightChar.dayBranch),
-                        self.branchTable.getResult(self.eightChar.hourTrunk + self.eightChar.hourBranch)]
-        self.na_yin = []
-        for item in self.eightWord:
-            self.na_yin.append(na_yin_dict[item])
-        self.daYunJiaZi = self.fate_plan.strDaYunJiaZi.split(" ")
-        self.daYunNaYin = self.fate_plan.strDaYunNaYin.split(" ")
-        self.daYunZhouSui = self.fate_plan.strDaYunZhouSui.split(" ")
-        self.daYunQiNian = self.fate_plan.strDaYunQiNian.split(" ")
+        self.exec_common()
 
     def exec_analyze_match(self):
         trunk = self.eightChar.trunk
@@ -139,6 +136,9 @@ class TempleWish:
         print(Counter(vigorous_weak_list))
 
     def exec_analyze_print(self):
+        """
+        打印相关信息
+        """
         print("=" * 140)
         print("{:<28s}{:<28s}{:<28s}{:<28s}{:<28s}".format('--', ' 年', " 月", " 日", " 时"))
         print("-" * 140)
@@ -153,8 +153,8 @@ class TempleWish:
                       self.eightChar.hourBranch))
 
         print("{:<28s}{:<28s}{:<28s}{:<28s}{:<28s}"
-              .format('藏干', self.eightChar.yearBranch, self.eightChar.monthBranch, self.eightChar.dayBranch,
-                      self.eightChar.hourBranch))
+              .format('藏干', self.hidden_trunk[0], self.hidden_trunk[1], self.hidden_trunk[2],
+                      self.hidden_trunk[3]))
 
         print(
             "{:<27s}{:<28s}{:<28s}{:<28s}{:<28s}"
@@ -193,7 +193,6 @@ if __name__ == '__main__':
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "男")
     a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
-
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")
