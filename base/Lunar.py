@@ -450,8 +450,8 @@ class SSQ:
         self.ym = []
         # 中气表, 其中.liqiu是节气立秋的儒略日, 计算三伏时用到
         self.ZQ = []
-        self.zhong_qi_pe1 = []
-        self.zhong_qi_pe2 = []
+        self.zhong_qi_pe1 = None
+        self.zhong_qi_pe2 = None
         # 合朔表
         self.HS = []
         # 各月大小
@@ -565,7 +565,7 @@ class SSQ:
                     (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
             else:
                 return math.floor(self.so_high(
-                    math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5);  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+                    math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
 
         if jd >= f1 & jd < f2:  # 平气或平朔
             i = 0
@@ -588,8 +588,8 @@ class SSQ:
             else:
                 D = math.floor(
                     self.so_low(math.floor(
-                        (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5);  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
-                n = self.SB.substr(math.floor((jd - f2) / 29.5306), 1);  # 找定朔修正值
+                        (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+                n = self.SB.substr(math.floor((jd - f2) / 29.5306), 1)   # 找定朔修正值
 
         if n == "1":
             return D + 1
@@ -602,20 +602,20 @@ class SSQ:
     # 如果天象的输出不使用北京时，会造成显示混乱，更严重的是无法与古历比对
 
     def calcY(self, jd):  # 农历排月序计算,可定出农历,有效范围：两个冬至之间(冬至一 <= d < 冬至二)
-        zhong_qi = self.ZQ
         he_suo = self.HS  # 中气表,日月合朔表(整日)
-
         # 该年的气
         W = int2((jd - 355 + 183) / 365.2422) * 365.2422 + 355  # 355是2000.12冬至,得到较靠近jd的冬至估计值
         if self.calc(W, '气') > jd:
             W -= 365.2422
+
+        zhong_qi = []
         i = 0
         while i < 25:
             zhong_qi.append(self.calc(W + 15.2184 * i, '气')) # 25个节气时刻(北京时间),从冬至开始到下一个冬至以后
-            self.zhong_qi_pe1.append(self.calc(W - 15.2, '气'))
-            self.zhong_qi_pe2.append(self.calc(W - 30.4, '气'))  # 补算二气,确保一年中所有月份的“气”全部被计算在内
+            self.zhong_qi_pe1 = (self.calc(W - 15.2, '气'))
+            self.zhong_qi_pe2 = (self.calc(W - 30.4, '气'))  # 补算二气,确保一年中所有月份的“气”全部被计算在内
             i = i + 1
-
+        self.ZQ = zhong_qi
         # 今年"首朔"的日月黄经差w
         w = self.calc(zhong_qi[0], '朔')  # 求较靠近冬至的朔日
         if w > zhong_qi[0]:
@@ -650,7 +650,7 @@ class SSQ:
                 if yy >= -479:
                     ns[i] = self.calc(1546083 - J2000 + int2(0.500 + (yy + 479) * 12.368422) * 29.5306, '朔'),
                     ns[i + 3] = '十三',
-                    ns[i + 6] = 2;  # 战国历,ly为-480.12.11
+                    ns[i + 6] = 2  # 战国历,ly为-480.12.11
                 if yy >= -220:
                     ns[i] = self.calc(1640641 - J2000 + int2(0.866 + (yy + 220) * 12.369000) * 29.5306, '朔'),
                     ns[i + 3] = '后九',
@@ -689,11 +689,11 @@ class SSQ:
             no = v2 % 12
             mc = self.obb.ymc[no]  # 月建对应的默认月名称：建子十一,建丑十二,建寅为正……
             if Dm >= 1724360 & Dm <= 1729794:
-                mc = self.obb.ymc[(v2 + 1) % 12];  # 8.01.15至 23.12.02 建子为十二,其它顺推
+                mc = self.obb.ymc[(v2 + 1) % 12]   # 8.01.15至 23.12.02 建子为十二,其它顺推
             elif Dm >= 1807724 & Dm <= 1808699:
                 mc = self.obb.ymc[(v2 + 1) % 12]  # 237.04.12至239.12.13 建子为十二,其它顺推
             elif Dm >= 1999349 & Dm <= 1999467:
-                mc = self.obb.ymc[(v2 + 2) % 12];  # 761.12.02至762.03.30 建子为正月,其它顺推
+                mc = self.obb.ymc[(v2 + 2) % 12]   # 761.12.02至762.03.30 建子为正月,其它顺推
             elif Dm >= 1973067 & Dm <= 1977052:
                 if v2 % 12 == 0:
                     mc = "正"

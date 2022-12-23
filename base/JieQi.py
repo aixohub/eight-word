@@ -18,7 +18,6 @@ class JieQi:
         self.ssq.calcY(int2((y - 2000) * 365.2422 + 180))
         i = 3
         while i < 24:  # 立春到大雪，21个
-            index = i - 3
             zq = self.ssq.ZQ[i]
             self.arrayJQ.append(self.obb.qi_accurate2(zq) + J2000)
             i = i + 1
@@ -26,7 +25,8 @@ class JieQi:
         self.ssq.calcY(int2((y + 1 - 2000) * 365.2422 + 180))
         i = 0
         while i < 4:  # 立春到大雪，21个
-            self.arrayJQ.append(self.obb.qi_accurate2(self.ssq.ZQ[i]) + J2000)
+            zq = self.ssq.ZQ[i]
+            self.arrayJQ.append(self.obb.qi_accurate2(zq) + J2000)
             i = i + 1
         return self.arrayJQ
 

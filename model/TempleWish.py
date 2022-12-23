@@ -189,9 +189,9 @@ class TempleWish:
 if __name__ == '__main__':
     a = TempleWish()
 
-    a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
+    #a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
-    # a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "男")
+    a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "女")
     #a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
