@@ -73,6 +73,7 @@ class TempleWish:
         hour = eight_char_list[3]
         jd = self.pai_pan.getFanTuiJD(ftStartYear, year, month, day, hour)
         lat = self.pai_pan.get_birth_place_lat(province, city)
+        self.pai_pan.get_gl_pai_pan(jd, gender, province, city, 0, 0)
         self.fate_plan.get_bazi_object(jd, gender, lat, 0)
         self.fate_plan.get_ten_big_fate()
         self.eightChar = EightChar(self.pai_pan.eight_char)
@@ -139,6 +140,7 @@ class TempleWish:
         """
         打印相关信息
         """
+        print(self.pai_pan.tips)
         print("=" * 140)
         print("{:<28s}{:<28s}{:<28s}{:<28s}{:<28s}".format('--', ' 年', " 月", " 日", " 时"))
         print("-" * 140)
@@ -192,8 +194,9 @@ if __name__ == '__main__':
     #a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
     #a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "女")
-    a.exec_analyze_eight('北京市', '海淀区', 1924, "丙辰 壬辰 戊戌 辛酉", "女")
+    #a.exec_analyze_eight('北京市', '海淀区', 1924, "丙辰 壬辰 戊戌 辛酉", "女")
     #a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
+    a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", '男')
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")

@@ -349,6 +349,11 @@ class DaySelected:
         self.y = ""  # 所在公历年, 同lun.y
         self.m = ""  # 所在公历月, 同lun.m
         self.d = ""  # 日名称(公历)
+        self.Y = None
+        self.M = None
+        self.D = 1
+        self.h = 12
+        self.s = 0.1
         self.dn = ""  # 所在公历月的总天数, 同lun.d0
         self.week0 = ''  # 所在月的月首的星期, 同lun.w0
         self.week = ""  # 星期
@@ -370,6 +375,10 @@ class DaySelected:
         """
         self.bz_zty = None
         self.yyyy_MM_dd = None
+        self.JD = JD()
+
+    def toJD(self):
+        return self.JD.to_jd(self.Y, self.M, self.D, self.h, self.m, self.s)
 
 
 class SSQ:
@@ -565,7 +574,7 @@ class SSQ:
                     (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
             else:
                 return math.floor(self.so_high(
-                    math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+                    math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
 
         if (jd >= f1) & (jd < f2):  # 平气或平朔
             i = 0
@@ -585,13 +594,13 @@ class SSQ:
                     math.floor(
                         (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
                 startIndex = math.floor((jd - f2) / 365.2422 * 24)
-                n = self.QB[startIndex: startIndex+1]  # 找定气修正值
+                n = self.QB[startIndex: startIndex + 1]  # 找定气修正值
             else:
                 D = math.floor(
                     self.so_low(math.floor(
-                        (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
+                        (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)  # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
                 startIndex = math.floor((jd - f2) / 29.5306)
-                n = self.SB[startIndex: startIndex+1]   # 找定朔修正值
+                n = self.SB[startIndex: startIndex + 1]  # 找定朔修正值
 
         if n == "1":
             return D + 1
@@ -613,7 +622,7 @@ class SSQ:
         zhong_qi = []
         i = 0
         while i < 25:
-            zhong_qi.append(self.calc(W + 15.2184 * i, '气')) # 25个节气时刻(北京时间),从冬至开始到下一个冬至以后
+            zhong_qi.append(self.calc(W + 15.2184 * i, '气'))  # 25个节气时刻(北京时间),从冬至开始到下一个冬至以后
             self.zhong_qi_pe1 = (self.calc(W - 15.2, '气'))
             self.zhong_qi_pe2 = (self.calc(W - 30.4, '气'))  # 补算二气,确保一年中所有月份的“气”全部被计算在内
             i = i + 1
@@ -634,7 +643,7 @@ class SSQ:
         i = 0
         while i < 14:
             self.dx.append(self.HS[i + 1] - self.HS[i])  # 月大小
-            self.ym.append(i)   # 月序初始化
+            self.ym.append(i)  # 月序初始化
             i = i + 1
         # -721年至-104年的后九月及月建问题,与朔有关，与气无关
         YY = int2((self.ZQ[0] + 10 + 180) / 365.2422) + 2000  # 确定年份
@@ -691,11 +700,11 @@ class SSQ:
             no = v2 % 12
             mc = self.obb.ymc[no]  # 月建对应的默认月名称：建子十一,建丑十二,建寅为正……
             if Dm >= 1724360 & Dm <= 1729794:
-                mc = self.obb.ymc[(v2 + 1) % 12]   # 8.01.15至 23.12.02 建子为十二,其它顺推
+                mc = self.obb.ymc[(v2 + 1) % 12]  # 8.01.15至 23.12.02 建子为十二,其它顺推
             elif Dm >= 1807724 & Dm <= 1808699:
                 mc = self.obb.ymc[(v2 + 1) % 12]  # 237.04.12至239.12.13 建子为十二,其它顺推
             elif Dm >= 1999349 & Dm <= 1999467:
-                mc = self.obb.ymc[(v2 + 2) % 12]   # 761.12.02至762.03.30 建子为正月,其它顺推
+                mc = self.obb.ymc[(v2 + 2) % 12]  # 761.12.02至762.03.30 建子为正月,其它顺推
             elif Dm >= 1973067 & Dm <= 1977052:
                 if v2 % 12 == 0:
                     mc = "正"
@@ -709,6 +718,46 @@ class SSQ:
             i = i + 1
 
 
+class Lunar:
+    def __init__(self):
+        """
+
+        """
+        self.lun = []
+        i = 0
+        while i < 31:
+            self.lun.append(DaySelected())
+            i = i + 1
+        self.JD = JD()
+        self.obb = Obb()
+
+    def yueLiCalc(self, By, Bm):
+        JD = DaySelected()
+        JD.h = 12
+        JD.m = 0
+        JD.s = 0.1
+        JD.Y = By
+        JD.M = Bm
+        JD.D = 1
+        Bd0 = int2(JD.toJD()) - J2000
+        JD.M = JD.M + 1
+        if JD.M > 12:
+            JD.Y = JD.Y + 1
+            JD.M = 1
+        Bdn = int2(JD.toJD()) - J2000 - Bd0  # 本月天数(公历)
+
+        w0 = (Bd0 + J2000 + 1 + 7000000) % 7  # 本月第一天的星期
+        y = By  # 公历年份
+        m = Bm  # 公历月分
+        d0 = Bd0
+        dn = Bdn
+        # 所属公历年对应的农历干支纪年
+        c = By - 1984 + 12000
+        Ly = self.obb.Gan[c % 10] + self.obb.Zhi[c % 12]  # 干支纪年
+        ShX = self.obb.ShX[c % 12]  # 该年对应的生肖
+        nianhao = self.obb.get_NH(By)
+
+
 if __name__ == '__main__':
-    a = Obb()
-    print(a)
+    l = Lunar()
+    l.yueLiCalc(2022, 11)

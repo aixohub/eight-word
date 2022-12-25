@@ -3138,6 +3138,12 @@ class JD:
     def __init__(self):
         self.jd = None
 
+    def to_jd(self, Y, M, D, h, m, s):
+        """
+
+        """
+        return self.get_jd(Y, M, D + ((s / 60 + m) / 60 + h) / 24)
+
     def get_jd(self, y, m, d):
         """
         公历转儒略日
@@ -3216,6 +3222,16 @@ class JD:
         m = m[len(m) - 2: 2]
         s = s[len(s) - 2: 2]
         return Y + "-" + M + "-" + D + " " + h + ":" + m + ":" + s
+
+    def get_i_day_of_week(self, curJD):
+        """
+        根据儒略日计算星期几序号，从0 到 6
+        2000年1月1号12点是周六，序号5
+        """
+        # 加一个大整数，保证是正的，大整数是7的倍数
+        delta = math.floor(curJD - J2000 + 0.5) + 7000000
+        dw = ((delta % 7) + 5) % 7
+        return dw
 
 
 def timeStr(jd):
