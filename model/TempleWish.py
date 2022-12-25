@@ -1,10 +1,10 @@
 import collections
 from collections import Counter
 
-from base.Paipan import Paipan
-from model.EightChar import EightChar
-from model.FatePlan import FatePlan
 from base.BaseDict import na_yin_dict
+from base.FatePlan import FatePlan
+from model.Paipan import Paipan
+from model.EightChar import EightChar
 from model.SkyAndLandDict import SkyAndLandDict
 from model.TenGodTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTable, TenGodBranchTable, SheepBladeTable
 

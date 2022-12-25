@@ -3,11 +3,11 @@ import math
 from base import JD
 from base.BaseDict import jia_zi, ArrayDunRi, ArrayDunNian, DZShengXiao, WeekDays
 from base.Eph0 import J2000, radd
+from base.FatePlan import FatePlan
 from base.JW import JW
 from base.JieQi import JieQi
 from base.Lunar import Obb, DaySelected
 from base.Tool import timeStr2hour
-from model.FatePlan import FatePlan
 
 
 class Paipan:
