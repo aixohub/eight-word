@@ -567,7 +567,7 @@ class SSQ:
                 return math.floor(self.so_high(
                     math.floor((jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
 
-        if jd >= f1 & jd < f2:  # 平气或平朔
+        if (jd >= f1) & (jd < f2):  # 平气或平朔
             i = 0
             while i < len(B):
                 if jd + pc < B[i + 2]:
@@ -579,17 +579,19 @@ class SSQ:
                 D = D + 1  # 如果使用太初历计算-103年1月24日的朔日,结果得到的是23日,这里修正为24日(实历)。修正后仍不影响-103的无中置闰。如果使用秦汉历，得到的是24日，本行D不会被执行。
             return D - 2451545
 
-        if jd >= f2 & jd < f3:  # 定气或定朔
+        if (jd >= f2) & (jd < f3):  # 定气或定朔
             if qs == '气':
                 D = math.floor(self.qi_low(
                     math.floor(
                         (jd + pc - 2451259) / 365.2422 * 24) * math.pi / 12) + 0.5)  # 2451259是1999.3.21,太阳视黄经为0,春分.定气计算
-                n = self.QB.substr(math.floor((jd - f2) / 365.2422 * 24), 1)  # 找定气修正值
+                startIndex = math.floor((jd - f2) / 365.2422 * 24)
+                n = self.QB[startIndex: startIndex+1]  # 找定气修正值
             else:
                 D = math.floor(
                     self.so_low(math.floor(
                         (jd + pc - 2451551) / 29.5306) * math.pi * 2) + 0.5)   # 2451551是2000.1.7的那个朔日,黄经差为0.定朔计算
-                n = self.SB.substr(math.floor((jd - f2) / 29.5306), 1)   # 找定朔修正值
+                startIndex = math.floor((jd - f2) / 29.5306)
+                n = self.SB[startIndex: startIndex+1]   # 找定朔修正值
 
         if n == "1":
             return D + 1

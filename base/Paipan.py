@@ -80,7 +80,7 @@ class Paipan:
                 break  # 找到了
             i = i + 1
         # 判断
-        if (theIndex < 0):
+        if theIndex < 0:
             return -1  # 没找到
         # 假定找到了
         # 如果该八字在节气当天，月份可能对，也可能错，不管对错，都当找到了
