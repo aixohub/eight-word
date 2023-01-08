@@ -38,6 +38,10 @@ class FateOminous:
         #
         dayTrunk = self.eightChar.dayTrunk
         branch = self.eightChar.branch
+        with pd.option_context('display.max_rows', None,
+                               'display.max_columns', None,
+                               'display.precision', 3,):  # more options can be specified also
+            print(table.to_markdown())
         for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("羊刃 day_info ：" + dayTrunk + item + " = " + day_info)
