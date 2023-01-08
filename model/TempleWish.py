@@ -205,6 +205,7 @@ if __name__ == '__main__':
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", '男')
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 戊寅", '男')
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "丁卯 庚戌 辛亥 戊戌", '男')
 
     a.exec_analyze_eight('北京市', '海淀区', 1984, "己卯 丁丑 甲子 乙亥", '女')
 
