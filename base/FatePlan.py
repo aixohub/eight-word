@@ -5,7 +5,7 @@ import pandas as pd
 from base import int2, J2000, radd, dt_T, pi2, XL, pty_zty2, JD
 from base.BaseDict import JieQiMing, ArrayDunNian, NaYin, jia_zi
 from base.JieQi import JieQi
-from model.TenGodTable import FiveElementTable
+from model.GodTenTable import FiveElementTable
 
 
 class BaZiObject:

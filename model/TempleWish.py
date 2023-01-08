@@ -6,7 +6,7 @@ from base.FatePlan import FatePlan
 from model.Paipan import Paipan
 from model.EightChar import EightChar
 from model.SkyAndLandDict import SkyAndLandDict
-from model.TenGodTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTable, TenGodBranchTable, SheepBladeTable
+from model.GodTenTable import VigorousWeakTable, FiveElementTable, TenGodTrunkTable, TenGodBranchTable, SheepBladeTable
 
 
 class TempleWish:

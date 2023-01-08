@@ -3,6 +3,10 @@ import pandas as pd
 
 
 class LuckyGod:
+    """
+
+
+    """
     def __init__(self, eightChar):
         self.eightChar = eightChar
         self.tips = ''
@@ -35,6 +39,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("天乙 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("天乙 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -69,6 +74,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("太极贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("太极贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -117,6 +123,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("天德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("天德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -147,6 +154,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -175,6 +183,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -207,6 +216,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -240,6 +250,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("福星贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("福星贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -279,6 +290,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("文昌贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("文昌贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -309,6 +321,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("魁罡贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("魁罡贵人 day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -340,6 +353,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearTrunk, item]
             print("back year_info ：" + yearTrunk + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayTrunk, item]
             print("back day_info ：" + dayTrunk + item + " = " + day_info)
 
@@ -350,18 +364,18 @@ class LuckyGod:
         """
         table_header = ['干', '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
         # 定义表数据          '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌',  '亥'
-        table_data = [['子', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['丑', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['寅', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['卯', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['辰', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['巳', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['午', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['未', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['申', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['酉', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['戌', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['亥', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否']
+        table_data = [['子', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['丑', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是'],
+                      ['寅', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否'],
+                      ['卯', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否'],
+                      ['辰', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['巳', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是'],
+                      ['午', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否'],
+                      ['未', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否'],
+                      ['申', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['酉', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是'],
+                      ['戌', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否'],
+                      ['亥', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否']
                       ]
         table = pd.DataFrame(table_data, columns=table_header)
         table.set_index("干", inplace=True)
@@ -371,6 +385,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearBranch, item]
             print("驿马 year_info ：" + yearBranch + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayBranch, item]
             print("驿马 day_info ：" + dayBranch + item + " = " + day_info)
 
@@ -383,18 +398,18 @@ class LuckyGod:
         """
         table_header = ['干', '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
         # 定义表数据          '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌',  '亥'
-        table_data = [['子', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['丑', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['寅', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['卯', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['辰', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['巳', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['午', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['未', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['申', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['酉', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['戌', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
-                      ['亥', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否']
+        table_data = [['子', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否'],
+                      ['丑', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['寅', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否'],
+                      ['卯', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否'],
+                      ['辰', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否'],
+                      ['巳', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['午', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否'],
+                      ['未', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否'],
+                      ['申', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否'],
+                      ['酉', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['戌', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否'],
+                      ['亥', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否']
                       ]
         table = pd.DataFrame(table_data, columns=table_header)
         table.set_index("干", inplace=True)
@@ -404,6 +419,7 @@ class LuckyGod:
         for item in branch:
             year_info = table.loc[yearBranch, item]
             print("华盖 year_info ：" + yearBranch + item + " = " + year_info)
+        for item in branch:
             day_info = table.loc[dayBranch, item]
             print("华盖 day_info ：" + dayBranch + item + " = " + day_info)
 
@@ -420,4 +436,8 @@ if __name__ == '__main__':
     b.five_fu_star()
     print("=" * 140)
     b.six_wen_chang()
+    print("=" * 140)
+    b.eight_stage_horse()
+    print("=" * 140)
+    b.nine_canopy()
     print()
