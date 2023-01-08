@@ -3,6 +3,8 @@ from collections import Counter
 
 from base.BaseDict import na_yin_dict
 from base.FatePlan import FatePlan
+from model.FateGodLucky import FateGodLucky
+from model.FateOminous import FateOminous
 from model.Paipan import Paipan
 from model.EightChar import EightChar
 from model.SkyAndLandDict import SkyAndLandDict
@@ -27,6 +29,8 @@ class TempleWish:
         self.sheepBladeTable = SheepBladeTable()
         self.vigorousWeakTable = VigorousWeakTable()
         self.skyAndLandDict = SkyAndLandDict()
+        self.fateGodLucky = FateGodLucky()
+        self.fateOminous = FateOminous()
         self.daYunJiaZi = None
         self.daYunNaYin = None
         self.daYunZhouSui = None
@@ -186,18 +190,23 @@ class TempleWish:
             for detail in item_list:
                 print("{:<5s}".format(detail), end=' ')
             print()
+        self.fateGodLucky.exec_god_lucky(self.eightChar)
+        self.fateOminous.exec_fate_ominous(self.eightChar)
 
 
 if __name__ == '__main__':
     a = TempleWish()
 
-    a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
-    a.exec_analyze_match()
+    # a.exec_analyze('北京市', '海淀区', "1991-3-16", "3:42:41", '男')
+    # a.exec_analyze_match()
     # a.exec_analyze_eight('北京市', '海淀区', 1984, "戊寅 癸亥 壬戌 丙午", "男")
-    #a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "女")
-    #a.exec_analyze_eight('北京市', '海淀区', 1924, "丙辰 壬辰 戊戌 辛酉", "女")
-    #a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
-    #a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", '男')
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "乙亥 己丑 壬戌 己酉", "女")
+    # a.exec_analyze_eight('北京市', '海淀区', 1924, "丙辰 壬辰 戊戌 辛酉", "女")
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "己巳 戊辰 癸亥 壬子", "男")
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 丁丑", '男')
+    # a.exec_analyze_eight('北京市', '海淀区', 1984, "辛未 辛卯 乙酉 戊寅", '男')
+
+    a.exec_analyze_eight('北京市', '海淀区', 1984, "己卯 丁丑 甲子 乙亥", '女')
 
     # a = EightChar("辛未 辛卯 乙酉 丁丑")
     # a = EightChar("丁卯 甲辰 辛卯 戊子")

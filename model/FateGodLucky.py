@@ -2,14 +2,39 @@ from model.EightChar import EightChar
 import pandas as pd
 
 
-class LuckyGod:
+class FateGodLucky:
     """
 
 
     """
-    def __init__(self, eightChar):
-        self.eightChar = eightChar
+
+    def __init__(self):
+        self.eightChar = None
         self.tips = ''
+
+    def exec_god_lucky(self, eightChar):
+        self.eightChar = eightChar
+        print("=" * 70 + " 吉神 " + "=" * 70)
+        self.one_tian_yi()
+        print("=" * 140)
+        self.second_tai_ji()
+        print("=" * 140)
+        self.three_tina_de()
+        self.three_yue_de()
+        print("=" * 140)
+        self.five_fu_star()
+        print("=" * 140)
+        self.eight_stage_horse()
+        print("=" * 140)
+        self.nine_canopy()
+        print("=" * 140)
+        self.sixteen_sky_doctor()
+
+    def print_format(self, flag):
+        if flag == '是':
+            return ' ✅'
+        else:
+            return ' ❌'
 
     def one_tian_yi(self):
         """
@@ -38,10 +63,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("天乙 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("天乙贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("天乙 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("天乙贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def second_tai_ji(self):
         """
@@ -73,10 +98,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("太极贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("太极贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("太极贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("太极贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def three_tina_de(self):
         """
@@ -117,15 +142,15 @@ class LuckyGod:
                       ]
         table = pd.DataFrame(table_data, columns=table_header)
         table.set_index("干", inplace=True)
-        yearTrunk = self.eightChar.yearTrunk
-        dayTrunk = self.eightChar.dayTrunk
+        monthBranch = self.eightChar.monthBranch
+        trunk = self.eightChar.trunk
         branch = self.eightChar.branch
+        for item in trunk:
+            year_info = table.loc[item, monthBranch]
+            print("天德贵人 year_info ：" + item + monthBranch + " = " + year_info + self.print_format(year_info))
         for item in branch:
-            year_info = table.loc[yearTrunk, item]
-            print("天德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
-        for item in branch:
-            day_info = table.loc[dayTrunk, item]
-            print("天德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            day_info = table.loc[item, monthBranch]
+            print("天德贵人 day_info ：" + item + monthBranch + " = " + day_info + self.print_format(day_info))
 
     def three_yue_de(self):
         """
@@ -148,15 +173,12 @@ class LuckyGod:
                       ]
         table = pd.DataFrame(table_data, columns=table_header)
         table.set_index("干", inplace=True)
-        yearTrunk = self.eightChar.yearTrunk
-        dayTrunk = self.eightChar.dayTrunk
+        monthBranch = self.eightChar.monthBranch
+        trunk = self.eightChar.trunk
         branch = self.eightChar.branch
-        for item in branch:
-            year_info = table.loc[yearTrunk, item]
-            print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
-        for item in branch:
-            day_info = table.loc[dayTrunk, item]
-            print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+        for item in trunk:
+            year_info = table.loc[item, monthBranch]
+            print("月德贵人 year_info ：" + item + monthBranch + " = " + year_info + self.print_format(year_info))
 
     def four__back(self):
         """
@@ -182,10 +204,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def four_san_qi(self):
         """
@@ -215,10 +237,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("月德贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("月德贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def five_fu_star(self):
         """
@@ -249,10 +271,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("福星贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("福星贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("福星贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("福星贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def six_wen_chang(self):
         """
@@ -289,10 +311,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("文昌贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("文昌贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("文昌贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("文昌贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def seven_yue_back(self):
         """
@@ -320,10 +342,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("魁罡贵人 year_info ：" + yearTrunk + item + " = " + year_info)
+            print("魁罡贵人 year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("魁罡贵人 day_info ：" + dayTrunk + item + " = " + day_info)
+            print("魁罡贵人 day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def eight_yue_back(self):
         """
@@ -352,10 +374,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearTrunk, item]
-            print("back year_info ：" + yearTrunk + item + " = " + year_info)
+            print("back year_info ：" + yearTrunk + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayTrunk, item]
-            print("back day_info ：" + dayTrunk + item + " = " + day_info)
+            print("back day_info ：" + dayTrunk + item + " = " + day_info + self.print_format(day_info))
 
     def eight_stage_horse(self):
         """
@@ -384,10 +406,10 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearBranch, item]
-            print("驿马 year_info ：" + yearBranch + item + " = " + year_info)
+            print("驿马 year_info ：" + yearBranch + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayBranch, item]
-            print("驿马 day_info ：" + dayBranch + item + " = " + day_info)
+            print("驿马 day_info ：" + dayBranch + item + " = " + day_info + self.print_format(day_info))
 
     def nine_canopy(self):
         """
@@ -418,26 +440,47 @@ class LuckyGod:
         branch = self.eightChar.branch
         for item in branch:
             year_info = table.loc[yearBranch, item]
-            print("华盖 year_info ：" + yearBranch + item + " = " + year_info)
+            print("华盖 year_info ：" + yearBranch + item + " = " + year_info + self.print_format(year_info))
         for item in branch:
             day_info = table.loc[dayBranch, item]
-            print("华盖 day_info ：" + dayBranch + item + " = " + day_info)
+            print("华盖 day_info ：" + dayBranch + item + " = " + day_info + self.print_format(day_info))
+
+    def sixteen_sky_doctor(self):
+        """
+        天医
+
+        正月生见丑，二月生见寅，三月生见卯，
+        四月生见辰，五月生见巳，六月生见午，
+        七月生见未，八月生见申，九月生见酉，
+        十月生见戌，十一月生见亥，十二月生见子。
+        """
+        table_header = ['干', '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
+        # 定义表数据          '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌',  '亥'
+        table_data = [['子', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是'],
+                      ['丑', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['寅', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['卯', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['辰', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否', '否'],
+                      ['巳', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否', '否'],
+                      ['午', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否', '否'],
+                      ['未', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否', '否'],
+                      ['申', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否', '否'],
+                      ['酉', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否', '否'],
+                      ['戌', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否', '否'],
+                      ['亥', '否', '否', '否', '否', '否', '否', '否', '否', '否', '否', '是', '否']
+                      ]
+        table = pd.DataFrame(table_data, columns=table_header)
+        table.set_index("干", inplace=True)
+        monthBranch = self.eightChar.monthBranch
+        branch = self.eightChar.branch
+        for item in branch:
+            day_info = table.loc[monthBranch, item]
+            print("天医 day_info ：" + monthBranch + item + " = " + day_info + self.print_format(day_info))
 
 
 if __name__ == '__main__':
     # a = EightChar("戊寅 癸亥 壬戌 丙午")
     # a = EightChar("乙丑 乙酉 甲戌 辛未")
     a = EightChar("辛未 辛卯 乙酉 戊寅")
-    b = LuckyGod(a)
-    b.one_tian_yi()
-    print("=" * 140)
-    b.second_tai_ji()
-    print("=" * 140)
-    b.five_fu_star()
-    print("=" * 140)
-    b.six_wen_chang()
-    print("=" * 140)
-    b.eight_stage_horse()
-    print("=" * 140)
-    b.nine_canopy()
-    print()
+    b = FateGodLucky()
+    b.exec_god_lucky(a)

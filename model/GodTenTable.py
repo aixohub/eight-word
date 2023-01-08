@@ -10,6 +10,8 @@ class TenGodTrunkTable:
     我克者。阳见阳，或阴见阴，为偏财。阴见阳，或阳见阴,为正财。
     仝我者。阳见阳,或阴见阴, 为比肩。阴见阳，或阳见阴，为劫财。
 
+    偏印又称枭神
+    偏官又称七杀
     再请举例明之，我字指何物。
     我字即日干，
     例如甲木日干，遇丁火，甲为阳木，丁为阴火，甲木能生丁火，丁乃我生而阳见阴，即伤官也，
@@ -81,7 +83,7 @@ class TenGodBranchTable:
         ]
         table = pd.DataFrame(table_data, columns=table_header)
         table.set_index("日干", inplace=True)
-        print(table.to_markdown())
+        # print(table.to_markdown())
         # 构造表
         self.table = table
 
